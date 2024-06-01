@@ -1,5 +1,6 @@
 #[allow(unused_imports)]
 use std::io::{self, Write};
+use std::process::{exit, ExitCode, ExitStatus};
 
 fn main() {
     // You can use print statements as follows for debugging, they'll be visible when running tests.
@@ -13,6 +14,33 @@ fn main() {
         let mut input = String::new();
         stdin.read_line(&mut input).unwrap();
 
-        println!("{}: command not found", input.trim());
+        let (command, args) = parse_input(input);
+
+        match command.as_str().trim() {
+            "exit" => {
+                match args.as_str().trim() {
+                    "0" => exit(0),
+                    _ => {}
+                };
+            }
+            "test" => {
+                let mut output = String::new();
+                match args.as_str() {
+                    _ => output.push_str(args.as_str()),
+                }
+                println!("{}", output);
+            }
+            _ => {
+                println!("{}: command not found", command.trim());
+            }
+        }
     }
+}
+
+fn parse_input(input: String) -> (String, String) {
+    let (command, args) = input
+        .split_once(' ')
+        .unwrap_or_else(|| (input.as_str(), ""));
+
+    (command.to_string(), args.to_string())
 }
