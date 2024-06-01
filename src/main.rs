@@ -1,6 +1,6 @@
 #[allow(unused_imports)]
 use std::io::{self, Write};
-use std::process::{exit, ExitCode, ExitStatus};
+use std::process::exit;
 
 fn main() {
     // You can use print statements as follows for debugging, they'll be visible when running tests.
@@ -22,13 +22,6 @@ fn main() {
                     "0" => exit(0),
                     _ => {}
                 };
-            }
-            "test" => {
-                let mut output = String::new();
-                match args.as_str() {
-                    _ => output.push_str(args.as_str()),
-                }
-                println!("{}", output);
             }
             _ => {
                 println!("{}: command not found", command.trim());
