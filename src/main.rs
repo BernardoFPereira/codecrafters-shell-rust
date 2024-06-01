@@ -23,6 +23,9 @@ fn main() {
                     _ => {}
                 };
             }
+            "echo" => {
+                println!("{}", args.trim());
+            }
             _ => {
                 println!("{}: command not found", command.trim());
             }
