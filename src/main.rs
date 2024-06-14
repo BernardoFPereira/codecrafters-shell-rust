@@ -37,7 +37,7 @@ fn main() {
                 Command::Type => command_type(args),
             }
         } else {
-            println!("Command not found: {}", &input.trim());
+            println!("{}: command not found", &input.trim());
         }
     }
 }
