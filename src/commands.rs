@@ -2,7 +2,7 @@ use crate::Command;
 use std::process::exit;
 
 pub fn command_echo(args: String) {
-    println!("{}", args.as_str());
+    println!("{}", args.as_str().trim());
 }
 
 pub fn command_exit(args: String) {
