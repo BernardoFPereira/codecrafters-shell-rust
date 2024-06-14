@@ -23,8 +23,8 @@ pub fn command_type(args: String) {
     };
 
     if is_builtin {
-        println!("{} is a builtin", args);
+        println!("{} is a shell builtin", args);
     } else {
-        println!("{} not found", args);
+        println!("{}: not found", args);
     }
 }
