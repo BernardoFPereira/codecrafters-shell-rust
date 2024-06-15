@@ -37,7 +37,8 @@ pub fn command_type(cmd_args: String) {
 
                 for entry in dir.read_dir().unwrap() {
                     let file_path = entry.unwrap().path();
-                    if file_path.display().to_string().contains(cmd_args) {
+                    // Finds anything that contains the chars in cmd_args
+                    if file_path.display().to_string().ends_with(cmd_args) {
                         println!("{} is {}", cmd_args, file_path.display())
                     }
                 }
