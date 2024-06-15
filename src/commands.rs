@@ -40,6 +40,8 @@ pub fn command_type(cmd_args: String) {
                     // Finds anything that contains the chars in cmd_args
                     if file_path.display().to_string().ends_with(target.as_str()) {
                         println!("{} is {}", cmd_args, file_path.display())
+                    } else {
+                        println!("{}: not found", cmd_args)
                     }
                 }
             }
