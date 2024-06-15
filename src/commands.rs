@@ -39,10 +39,8 @@ pub fn command_type(cmd_args: String) {
                     let file_path = entry.unwrap().path();
                     // Finds anything that contains the chars in cmd_args
                     if file_path.display().to_string().ends_with(target.as_str()) {
-                        println!("{} is {}", cmd_args, file_path.display());
-                        return;
+                        println!("{} is {}", cmd_args, file_path.display())
                     }
-                    println!("{}: not found", cmd_args);
                 }
             }
         }
