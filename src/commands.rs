@@ -33,17 +33,12 @@ pub fn command_type(cmd_args: String) {
             let path_dirs = split_paths(&var);
 
             for dir in path_dirs {
-                // println!("{}", dir.display());
-
                 for entry in dir.read_dir().unwrap() {
+                    let mut target = String::from("/");
+                    target.push_str(cmd_args);
                     let file_path = entry.unwrap().path();
                     // Finds anything that contains the chars in cmd_args
-                    let bound_arg = format!("\\b{}", cmd_args);
-                    if file_path
-                        .display()
-                        .to_string()
-                        .ends_with(bound_arg.as_str())
-                    {
+                    if file_path.display().to_string().ends_with(target.as_str()) {
                         println!("{} is {}", cmd_args, file_path.display())
                     }
                 }
