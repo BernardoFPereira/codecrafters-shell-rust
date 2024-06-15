@@ -1,4 +1,6 @@
 use crate::Command;
+use std::env::*;
+use std::fs::*;
 use std::process::exit;
 
 pub fn command_echo(args: String) {
@@ -13,9 +15,9 @@ pub fn command_exit(args: String) {
     exit(0);
 }
 
-pub fn command_type(args: String) {
-    let args = args.trim();
-    let is_builtin = match args {
+pub fn command_type(cmd_args: String) {
+    let cmd_args = cmd_args.trim();
+    let is_builtin = match cmd_args {
         "exit" => true,
         "echo" => true,
         "type" => true,
@@ -23,8 +25,17 @@ pub fn command_type(args: String) {
     };
 
     if is_builtin {
-        println!("{} is a shell builtin", args);
+        println!("{} is a shell builtin", cmd_args);
+        return;
     } else {
-        println!("{}: not found", args);
+        // Look for executables in PATH
+        let env_var = var_os("PATH");
+        if let Some(var) = env_var {
+            let path_dirs = split_paths(&var);
+
+            for dir in path_dirs {
+                println!("{}", dir.display());
+            }
+        }
     }
 }
