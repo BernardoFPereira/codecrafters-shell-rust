@@ -4,14 +4,6 @@ mod commands;
 use commands::*;
 use std::io::{self, Write};
 
-#[derive(Debug)]
-enum Command {
-    Echo,
-    Exit,
-    Type,
-    // None,
-}
-
 fn main() {
     // You can use print statements as follows for debugging, they'll be visible when running tests.
     // println!("Logs from your program will appear here!");
@@ -31,11 +23,7 @@ fn main() {
         let (command, args) = parse_input(&input);
 
         if let Some(command) = command {
-            match command {
-                Command::Exit => command_exit(args),
-                Command::Echo => command_echo(args),
-                Command::Type => command_type(args),
-            }
+            command.run(args);
         } else {
             println!("{}: command not found", &input.trim());
         }

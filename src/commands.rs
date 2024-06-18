@@ -1,8 +1,24 @@
-use crate::Command;
 use std::env::*;
 use std::fs::*;
 use std::path::*;
 use std::process::exit;
+
+#[derive(Debug)]
+pub enum Command {
+    Echo,
+    Exit,
+    Type,
+    // None,
+}
+impl Command {
+    pub fn run(&self, cmd_args: String) {
+        match self {
+            Command::Echo => command_echo(cmd_args),
+            Command::Exit => command_exit(cmd_args),
+            Command::Type => command_type(cmd_args),
+        }
+    }
+}
 
 pub fn command_echo(args: String) {
     println!("{}", args.as_str().trim());
@@ -29,17 +45,12 @@ pub fn command_type(cmd_args: String) {
         println!("{} is a shell builtin", cmd_args);
         return;
     } else {
-        let env_var = var_os("PATH");
-        let target = format!("{}{}", MAIN_SEPARATOR, cmd_args);
-
-        if let Some(var) = env_var {
+        if let Some(var) = var_os("PATH") {
+            let target = format!("{}{}", MAIN_SEPARATOR, cmd_args);
             let mut path_dirs = split_paths(&var);
-            if let Some(dir) =
-                path_dirs.find(|path| metadata(format!("{}{}", path.display(), target)).is_ok())
-            {
-                println!("{} is {}", cmd_args, dir.display());
-            } else {
-                println!("{}: not found", cmd_args);
+            match path_dirs.find(|path| metadata(format!("{}{}", path.display(), target)).is_ok()) {
+                Some(dir) => println!("{} is {}{}", cmd_args, dir.display(), target),
+                None => println!("{}: not found", cmd_args),
             }
         }
     }
