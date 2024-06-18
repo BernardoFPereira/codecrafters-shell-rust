@@ -16,7 +16,7 @@ impl CommandType {
             CommandType::Echo => command_echo(cmd_args),
             CommandType::Exit => command_exit(cmd_args),
             CommandType::Type => command_type(cmd_args),
-            CommandType::Execute(cmd) => command_execute(cmd.clone(), cmd_args),
+            CommandType::Execute(cmd) => command_execute(cmd.to_owned(), cmd_args),
         }
     }
 }
@@ -59,7 +59,7 @@ pub fn command_type(cmd_args: String) {
     }
 }
 
-pub fn command_execute(cmd: String, _cmd_args: String) {
+pub fn command_execute(cmd: String, cmd_args: String) {
     // println!("{cmd} {cmd_args}");
     match find_executable_in_path(cmd.clone().trim().to_string()) {
         Ok(dir) => {
@@ -68,6 +68,7 @@ pub fn command_execute(cmd: String, _cmd_args: String) {
             if let Ok(_) = File::open(&executable_path) {
                 Command::new(executable_path)
                     .env("PATH", "/bin")
+                    .arg(cmd_args)
                     .spawn()
                     .expect("Something went wrong");
             }
