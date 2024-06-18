@@ -60,20 +60,18 @@ pub fn command_type(cmd_args: String) {
 }
 
 pub fn command_execute(cmd: String, cmd_args: String) {
-    // println!("{cmd} {cmd_args}");
     match find_executable_in_path(cmd.clone().trim().to_string()) {
         Ok(dir) => {
-            //run executable
             let executable_path = format!("{}{}{}", dir.display(), MAIN_SEPARATOR, cmd);
             if let Ok(_) = File::open(&executable_path) {
                 Command::new(executable_path)
-                    .arg(cmd_args)
+                    .arg(cmd_args.trim().to_string())
                     .spawn()
                     .expect("Something went wrong");
             }
+            return;
         }
         Err(error) => {
-            // didn't find executable in PATH
             println!("{}!", error);
         }
     }
@@ -87,7 +85,6 @@ fn find_executable_in_path(executable: String) -> Result<PathBuf, String> {
             path_dirs.find(|path| metadata(format!("{}{}", path.display(), target)).is_ok())
         {
             return Ok(dir);
-            // println!("{} is {}{}", executable, dir.display(), target);
         }
     }
     return Err(format!("{executable}: not found"));
