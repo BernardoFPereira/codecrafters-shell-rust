@@ -59,7 +59,7 @@ pub fn command_type(cmd_args: String) {
     }
 }
 
-pub fn command_execute(cmd: String, cmd_args: String) {
+pub fn command_execute(cmd: String, _cmd_args: String) {
     // println!("{cmd} {cmd_args}");
     match find_executable_in_path(cmd.clone().trim().to_string()) {
         Ok(dir) => {
