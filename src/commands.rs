@@ -67,7 +67,6 @@ pub fn command_execute(cmd: String, cmd_args: String) {
             let executable_path = format!("{}{}{}", dir.display(), MAIN_SEPARATOR, cmd);
             if let Ok(_) = File::open(&executable_path) {
                 Command::new(executable_path)
-                    .env("PATH", "/bin")
                     .arg(cmd_args)
                     .spawn()
                     .expect("Something went wrong");
