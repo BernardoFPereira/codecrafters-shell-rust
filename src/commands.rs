@@ -8,7 +8,7 @@ pub enum CommandType {
     Echo,
     Exit,
     Type,
-    Execute,
+    Execute(String),
 }
 impl CommandType {
     pub fn run(&self, cmd_args: String) {
@@ -16,7 +16,7 @@ impl CommandType {
             CommandType::Echo => command_echo(cmd_args),
             CommandType::Exit => command_exit(cmd_args),
             CommandType::Type => command_type(cmd_args),
-            CommandType::Execute => command_execute(cmd_args),
+            CommandType::Execute(cmd) => command_execute(cmd.clone(), cmd_args),
         }
     }
 }
@@ -59,11 +59,12 @@ pub fn command_type(cmd_args: String) {
     }
 }
 
-pub fn command_execute(cmd_args: String) {
-    match find_executable_in_path(cmd_args.clone()) {
+pub fn command_execute(cmd: String, cmd_args: String) {
+    // println!("{cmd} {cmd_args}");
+    match find_executable_in_path(cmd.clone().trim().to_string()) {
         Ok(dir) => {
             //run executable
-            let executable_path = format!("{}{}{}", dir.display(), MAIN_SEPARATOR, cmd_args);
+            let executable_path = format!("{}{}{}", dir.display(), MAIN_SEPARATOR, cmd);
             if let Ok(_) = File::open(&executable_path) {
                 Command::new(executable_path)
                     .env("PATH", "/bin")

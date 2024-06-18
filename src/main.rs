@@ -39,7 +39,7 @@ fn parse_input(input: &String) -> (Option<CommandType>, String) {
         "exit" => Some(CommandType::Exit),
         "echo" => Some(CommandType::Echo),
         "type" => Some(CommandType::Type),
-        _ => Some(CommandType::Execute),
+        _ => Some(CommandType::Execute(command.trim().to_string())),
     };
 
     (command_type, args.to_string())
