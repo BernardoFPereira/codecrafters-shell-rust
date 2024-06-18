@@ -1,21 +1,22 @@
 use std::env::*;
 use std::fs::*;
 use std::path::*;
-use std::process::exit;
+use std::process::{exit, Command};
 
 #[derive(Debug)]
-pub enum Command {
+pub enum CommandType {
     Echo,
     Exit,
     Type,
-    // None,
+    Execute,
 }
-impl Command {
+impl CommandType {
     pub fn run(&self, cmd_args: String) {
         match self {
-            Command::Echo => command_echo(cmd_args),
-            Command::Exit => command_exit(cmd_args),
-            Command::Type => command_type(cmd_args),
+            CommandType::Echo => command_echo(cmd_args),
+            CommandType::Exit => command_exit(cmd_args),
+            CommandType::Type => command_type(cmd_args),
+            CommandType::Execute => command_execute(cmd_args),
         }
     }
 }
@@ -45,13 +46,48 @@ pub fn command_type(cmd_args: String) {
         println!("{} is a shell builtin", cmd_args);
         return;
     } else {
-        if let Some(var) = var_os("PATH") {
-            let target = format!("{}{}", MAIN_SEPARATOR, cmd_args);
-            let mut path_dirs = split_paths(&var);
-            match path_dirs.find(|path| metadata(format!("{}{}", path.display(), target)).is_ok()) {
-                Some(dir) => println!("{} is {}{}", cmd_args, dir.display(), target),
-                None => println!("{}: not found", cmd_args),
-            }
+        match find_executable_in_path(cmd_args.to_string()) {
+            Ok(dir) => println!(
+                "{} is {}{}{}",
+                cmd_args,
+                dir.display(),
+                MAIN_SEPARATOR,
+                cmd_args
+            ),
+            Err(e) => println!("{e}"),
         }
     }
+}
+
+pub fn command_execute(cmd_args: String) {
+    match find_executable_in_path(cmd_args.clone()) {
+        Ok(dir) => {
+            //run executable
+            let executable_path = format!("{}{}{}", dir.display(), MAIN_SEPARATOR, cmd_args);
+            if let Ok(_) = File::open(&executable_path) {
+                Command::new(executable_path)
+                    .env("PATH", "/bin")
+                    .spawn()
+                    .expect("Something went wrong");
+            }
+        }
+        Err(error) => {
+            // didn't find executable in PATH
+            println!("{}!", error);
+        }
+    }
+}
+
+fn find_executable_in_path(executable: String) -> Result<PathBuf, String> {
+    if let Some(var) = var_os("PATH") {
+        let target = format!("{}{}", MAIN_SEPARATOR, executable);
+        let mut path_dirs = split_paths(&var);
+        if let Some(dir) =
+            path_dirs.find(|path| metadata(format!("{}{}", path.display(), target)).is_ok())
+        {
+            return Ok(dir);
+            // println!("{} is {}{}", executable, dir.display(), target);
+        }
+    }
+    return Err(format!("{executable}: not found"));
 }

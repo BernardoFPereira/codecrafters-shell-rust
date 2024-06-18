@@ -30,16 +30,16 @@ fn main() {
     }
 }
 
-fn parse_input(input: &String) -> (Option<Command>, String) {
+fn parse_input(input: &String) -> (Option<CommandType>, String) {
     let (command, args) = input
         .split_once(' ')
         .unwrap_or_else(|| (input.as_str(), ""));
 
     let command_type = match command.trim() {
-        "exit" => Some(Command::Exit),
-        "echo" => Some(Command::Echo),
-        "type" => Some(Command::Type),
-        _ => None,
+        "exit" => Some(CommandType::Exit),
+        "echo" => Some(CommandType::Echo),
+        "type" => Some(CommandType::Type),
+        _ => Some(CommandType::Execute),
     };
 
     (command_type, args.to_string())
