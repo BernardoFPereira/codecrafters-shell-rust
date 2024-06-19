@@ -3,13 +3,14 @@ use std::fs::*;
 use std::path::*;
 use std::process::{exit, Command, Stdio};
 
-#[derive(Debug)]
+#[derive(Clone, Debug)]
 pub enum CommandType {
     Echo,
     Exit,
     Type,
     Help,
     Pwd,
+    Cd,
     Execute(String),
 }
 impl CommandType {
@@ -20,6 +21,7 @@ impl CommandType {
             CommandType::Type => command_type(cmd_args),
             CommandType::Help => command_help(),
             CommandType::Pwd => command_print_working_directory(),
+            CommandType::Cd => command_change_working_directory(cmd_args),
             CommandType::Execute(cmd) => command_execute(cmd.to_owned(), cmd_args),
         }
     }
@@ -44,6 +46,7 @@ pub fn command_type(cmd_args: String) {
         "echo" => true,
         "type" => true,
         "help" => true,
+        "cd" => true,
         "pwd" => true,
         _ => false,
     };
@@ -87,6 +90,22 @@ pub fn command_print_working_directory() {
     if let Ok(path) = current_dir() {
         println!("{}", path.display())
     }
+}
+
+pub fn command_change_working_directory(path: String) {
+    let path_to_go = Path::new(path.trim());
+    if let Ok(data) = metadata(path_to_go) {
+        if data.is_dir() {
+            if set_current_dir(path_to_go).is_ok() {
+                return;
+            }
+        }
+        if data.is_file() {
+            println!("Error! Can't cd into a file!");
+            return;
+        }
+    }
+    println!("No such file or directory!");
 }
 
 pub fn command_help() {
