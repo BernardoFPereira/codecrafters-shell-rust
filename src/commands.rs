@@ -94,5 +94,5 @@ fn find_executable_in_path(executable: String) -> Result<PathBuf, String> {
             return Ok(dir);
         }
     }
-    return Err(format!("{executable}: not found"));
+    return Err(format!("{executable}: not found\n"));
 }
