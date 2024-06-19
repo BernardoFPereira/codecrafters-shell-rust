@@ -63,13 +63,11 @@ pub fn command_execute(cmd: String, cmd_args: String) {
     match find_executable_in_path(cmd.clone().trim().to_string()) {
         Ok(dir) => {
             let executable_path = format!("{}{}{}", dir.display(), MAIN_SEPARATOR, cmd);
-            if let Ok(_) = File::open(&executable_path) {
-                Command::new(executable_path)
-                    .arg(cmd_args.trim().to_string())
-                    .spawn()
-                    .expect("Something went wrong");
-            }
-            return;
+            Command::new(executable_path)
+                .arg(cmd_args.trim().to_string())
+                .spawn()
+                .expect("Something went wrong");
+            // return;
         }
         Err(error) => {
             println!("{}!", error);
