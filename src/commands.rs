@@ -105,7 +105,7 @@ pub fn command_change_working_directory(path: String) {
             return;
         }
     }
-    println!("{}: No such file or directory", path);
+    println!("{}: No such file or directory", path.trim());
 }
 
 pub fn command_help() {
