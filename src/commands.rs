@@ -1,13 +1,14 @@
 use std::env::*;
 use std::fs::*;
 use std::path::*;
-use std::process::{exit, Command};
+use std::process::{exit, Command, Stdio};
 
 #[derive(Debug)]
 pub enum CommandType {
     Echo,
     Exit,
     Type,
+    Help,
     Execute(String),
 }
 impl CommandType {
@@ -16,6 +17,7 @@ impl CommandType {
             CommandType::Echo => command_echo(cmd_args),
             CommandType::Exit => command_exit(cmd_args),
             CommandType::Type => command_type(cmd_args),
+            CommandType::Help => command_help(cmd_args),
             CommandType::Execute(cmd) => command_execute(cmd.to_owned(), cmd_args),
         }
     }
@@ -39,6 +41,7 @@ pub fn command_type(cmd_args: String) {
         "exit" => true,
         "echo" => true,
         "type" => true,
+        "help" => true,
         _ => false,
     };
 
@@ -63,16 +66,22 @@ pub fn command_execute(cmd: String, cmd_args: String) {
     match find_executable_in_path(cmd.clone().trim().to_string()) {
         Ok(dir) => {
             let executable_path = format!("{}{}{}", dir.display(), MAIN_SEPARATOR, cmd);
-            Command::new(executable_path)
+            let command = Command::new(executable_path)
                 .arg(cmd_args.trim().to_string())
+                .stdin(Stdio::piped())
                 .spawn()
                 .expect("Something went wrong");
-            // return;
+
+            command.wait_with_output().expect("failed to wait");
         }
         Err(error) => {
             println!("{}!", error);
         }
     }
+}
+
+pub fn command_help(cmd_args: String) {
+    println!("welcome to russh! Rust Simple Shell");
 }
 
 fn find_executable_in_path(executable: String) -> Result<PathBuf, String> {
