@@ -40,6 +40,8 @@ fn parse_input(input: &String) -> (Option<CommandType>, String) {
         "echo" => Some(CommandType::Echo),
         "type" => Some(CommandType::Type),
         "help" => Some(CommandType::Help),
+        "pwd" => Some(CommandType::Pwd),
+        "cd" => Some(CommandType::Cd),
         _ => Some(CommandType::Execute(command.trim().to_string())),
     };
 

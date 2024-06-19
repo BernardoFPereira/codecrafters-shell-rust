@@ -9,6 +9,7 @@ pub enum CommandType {
     Exit,
     Type,
     Help,
+    Pwd,
     Execute(String),
 }
 impl CommandType {
@@ -18,6 +19,7 @@ impl CommandType {
             CommandType::Exit => command_exit(cmd_args),
             CommandType::Type => command_type(cmd_args),
             CommandType::Help => command_help(),
+            CommandType::Pwd => command_print_working_directory(),
             CommandType::Execute(cmd) => command_execute(cmd.to_owned(), cmd_args),
         }
     }
@@ -77,6 +79,12 @@ pub fn command_execute(cmd: String, cmd_args: String) {
         Err(error) => {
             println!("{}", error);
         }
+    }
+}
+
+pub fn command_print_working_directory() {
+    if let Ok(path) = current_dir() {
+        println!("{}", path.display())
     }
 }
 
