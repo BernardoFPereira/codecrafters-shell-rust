@@ -93,7 +93,13 @@ pub fn command_print_working_directory() {
 }
 
 pub fn command_change_working_directory(path: String) {
-    let path_to_go = Path::new(path.trim());
+    let path_to_go = if path.trim() == "~" {
+        // Set path to HOME environment variable
+        var_os("HOME");
+        Path::new(path.trim())
+    } else {
+        Path::new(path.trim())
+    };
     if let Ok(data) = metadata(path_to_go) {
         if data.is_dir() {
             if set_current_dir(path_to_go).is_ok() {
