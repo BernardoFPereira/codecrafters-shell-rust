@@ -75,7 +75,7 @@ pub fn command_execute(cmd: String, cmd_args: String) {
             command.wait_with_output().expect("failed to wait");
         }
         Err(error) => {
-            println!("{}!", error);
+            println!("{}", error);
         }
     }
 }
@@ -94,5 +94,5 @@ fn find_executable_in_path(executable: String) -> Result<PathBuf, String> {
             return Ok(dir);
         }
     }
-    return Err(format!("{executable}: not found\n"));
+    return Err(format!("{executable}: not found"));
 }
