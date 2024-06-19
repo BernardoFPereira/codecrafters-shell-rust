@@ -44,6 +44,7 @@ pub fn command_type(cmd_args: String) {
         "echo" => true,
         "type" => true,
         "help" => true,
+        "pwd" => true,
         _ => false,
     };
 
