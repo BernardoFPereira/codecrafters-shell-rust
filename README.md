@@ -1,3 +1,5 @@
+# COMPLETE (for now)
+
 [![progress-banner](https://backend.codecrafters.io/progress/shell/29e5f924-71a7-4879-9f0d-6b412575ac64)](https://app.codecrafters.io/users/codecrafters-bot?r=2qF)
 
 This is a starting point for Rust solutions to the
