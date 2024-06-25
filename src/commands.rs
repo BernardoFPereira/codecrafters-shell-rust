@@ -95,8 +95,9 @@ pub fn command_print_working_directory() {
 pub fn command_change_working_directory(path: String) {
     let path_to_go = if path.trim() == "~" {
         // Set path to HOME environment variable
-        var_os("HOME");
-        Path::new(path.trim())
+        let home_path = env!("HOME");
+        // let target_path = format!("{}{}", home_path)
+        Path::new(home_path.trim())
     } else {
         Path::new(path.trim())
     };
